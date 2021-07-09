@@ -1,9 +1,9 @@
 import React from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
+import Backend from '../services/backend';
 
 class LaunchesWidget extends SubComponent {
 
@@ -36,8 +36,7 @@ class LaunchesWidget extends SubComponent {
      }
 
     getLaunches(){
-        axios
-            .get("/api/" + this.state.projectId + "/launch?includedFields=name,id,launchStats&orderby=id&orderdir=DESC&limit=" + this.limit)
+       Backend.get(this.state.projectId + "/launch?includedFields=name,id,launchStats&orderby=id&orderdir=DESC&limit=" + this.limit)
             .then(response => {
                  this.state.launches = response.data;
                  this.state.loading = false;

@@ -1,12 +1,12 @@
 import React from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import * as Utils from '../common/Utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import $ from 'jquery';
 import { FadeLoader } from 'react-spinners';
+import Backend from '../services/backend';
 
 class TestSuites extends SubComponent {
 
@@ -34,8 +34,7 @@ class TestSuites extends SubComponent {
     }
 
     getTestSuites(){
-        axios
-            .get("/api/" + this.props.match.params.project + "/testsuite")
+       Backend.get(this.props.match.params.project + "/testsuite")
             .then(response => {
                  this.state.testSuites = response.data;
                  this.state.testSuitesToDisplay = this.state.testSuites.slice();
@@ -66,7 +65,7 @@ class TestSuites extends SubComponent {
     }
 
     removeTestSuite(event){
-        axios.delete("/api/"  + this.props.match.params.project + "/testsuite/" + this.testSuiteToRemove)
+        Backend.delete(this.props.match.params.project + "/testsuite/" + this.testSuiteToRemove)
             .then(response => {
                 // eslint-disable-next-line eqeqeq
                 this.state.testSuites = this.state.testSuites.filter(testSuite => testSuite.id != this.testSuiteToRemove);

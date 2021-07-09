@@ -1,8 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
-import axios from "axios";
 import * as Utils from '../common/Utils';
+import Backend from '../services/backend';
 
 class ChangePassword extends SubComponent {
 
@@ -32,7 +32,7 @@ class ChangePassword extends SubComponent {
            event.preventDefault();
            return;
         }
-        axios.post('/api/user/change-password', {newPassword: this.state.password})
+        Backend.post('user/change-password', {newPassword: this.state.password})
         .then(response => {
             Utils.onSuccessMessage("Password successfully updated");
             window.location = "/";

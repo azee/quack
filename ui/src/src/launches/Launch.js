@@ -7,9 +7,9 @@ import LaunchTestcaseControls from '../launches/LaunchTestcaseControls';
 import LaunchAttributeStatsChart from '../launches/LaunchAttributeStatsChart';
 import LaunchForm from '../launches/LaunchForm'
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
+import Backend from '../services/backend';
 
 import $ from 'jquery';
 
@@ -55,8 +55,7 @@ class Launch extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        axios
-            .get("/api/" + this.state.projectId + "/attribute")
+        Backend.get(this.state.projectId + "/attribute")
             .then(response => {
                  this.state.projectAttributes = response.data;
                  this.setState(this.state);
@@ -67,8 +66,7 @@ class Launch extends SubComponent {
     }
 
     getLaunch(buildTree){
-        axios
-            .get("/api/" + this.state.projectId + "/launch/" + this.props.match.params.launchId)
+        Backend.get(this.state.projectId + "/launch/" + this.props.match.params.launchId)
             .then(response => {
                  this.state.launch = response.data;
                  if (!this.state.launch.testSuite || !this.state.launch.testSuite.filter){

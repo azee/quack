@@ -1,9 +1,9 @@
 import React from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
+import Backend from '../services/backend';
 
 class TestSuitesWidget extends SubComponent {
 
@@ -40,8 +40,7 @@ class TestSuitesWidget extends SubComponent {
     }
 
     getTestSuites(){
-        axios
-            .get("/api/" + this.state.projectId + "/testsuite")
+       Backend.get(this.state.projectId + "/testsuite")
             .then(response => {
                  this.state.testSuites = response.data;
                  this.state.testSuitesToDisplay = this.state.testSuites.slice(0, this.limit);

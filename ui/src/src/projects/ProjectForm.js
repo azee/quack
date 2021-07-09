@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import axios from "axios";
 import { withRouter } from 'react-router';
 import * as Utils from '../common/Utils';
-
+import Backend from '../services/backend';
 
 class ProjectForm extends Component {
 
@@ -36,7 +35,7 @@ class ProjectForm extends Component {
       }
 
       handleSubmit(event) {
-        axios.post('/api/project', this.state.project)
+        Backend.post('project', this.state.project)
         .then(response => {
             this.props.history.push('/projects/' + response.data.id);
         }).catch((error) => {
@@ -47,8 +46,7 @@ class ProjectForm extends Component {
 
     componentDidMount() {
         if (this.props.id){
-            axios
-              .get("/api/project/" + this.props.id)
+            Backend.get("project/" + this.props.id)
               .then(response => {
                 const newState = Object.assign({}, this.state, {
                   project: response.data

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import axios from "axios";
 import qs from 'qs';
-
+import Backend from '../services/backend';
 class Login extends Component {
 
     constructor(props) {
@@ -27,7 +26,7 @@ class Login extends Component {
     }
 
     handleSubmit(event) {
-        axios.post('/api/user/login?login=' + this.state.login + '&password=' + this.state.password)
+        Backend.post('user/login?login=' + this.state.login + '&password=' + this.state.password)
         .then(response => {
             this.onSessionChange(response.data);
             var params = qs.parse(this.props.location.search.substring(1));

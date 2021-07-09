@@ -2,11 +2,10 @@
 import React from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
 import * as Utils from '../common/Utils';
-
+import Backend from '../services/backend';
 class Organization extends SubComponent {
 
     constructor(props) {
@@ -41,8 +40,7 @@ class Organization extends SubComponent {
      }
 
      getOrganization(){
-        axios
-          .get("/api/organization/" + this.state.organization.id)
+        Backend.get("organization/" + this.state.organization.id)
           .then(response => {
             this.state.organization = response.data;
             this.setState(this.state);

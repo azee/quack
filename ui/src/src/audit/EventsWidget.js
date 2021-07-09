@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
-import axios from "axios";
+import Backend from '../services/backend';
 
 class EventsWidget extends Component {
     constructor(props) {
@@ -15,8 +15,7 @@ class EventsWidget extends Component {
       }
 
       getEvents(){
-           axios
-               .get("/api/" + this.state.projectId + "/audit?" + Utils.filterToQuery(this.state.filter))
+          Backend.get(this.state.projectId + "/audit?" + Utils.filterToQuery(this.state.filter))
                .then(response => {
                     this.state.events = response.data;
                     this.state.loading = false;

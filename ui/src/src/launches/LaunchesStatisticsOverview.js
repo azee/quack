@@ -5,8 +5,8 @@ import LaunchesTrendWidget from '../launches/LaunchesTrendWidget'
 import LaunchesByStatusesPieWidget from '../launches/LaunchesByStatusesPieWidget'
 import LaunchesByUsersPieWidget from '../launches/LaunchesByUsersPieWidget'
 import { FadeLoader } from 'react-spinners';
-import axios from "axios";
 import * as Utils from '../common/Utils';
+import Backend from '../services/backend';
 
 class LaunchesStatisticsOverview extends SubComponent {
 
@@ -32,8 +32,7 @@ class LaunchesStatisticsOverview extends SubComponent {
     }
 
     getStats(){
-        axios
-            .get("/api/" + this.state.projectId + "/launch/statistics" + this.props.location.search)
+        Backend.get(this.state.projectId + "/launch/statistics" + this.props.location.search)
             .then(response => {
                  this.state.stats = response.data;
                  this.state.loading = false;

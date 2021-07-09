@@ -2,13 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
-import axios from "axios";
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
-
-axios.defaults.withCredentials = true;
-
-
+import Backend from '../services/backend';
 
 class Projects extends Component {
     state = {
@@ -17,8 +13,7 @@ class Projects extends Component {
     };
 
     componentDidMount() {
-        axios
-          .get("/api/project")
+        Backend.get("project")
           .then(response => {
             const projects = response.data;
             // eslint-disable-next-line react/no-direct-mutation-state
@@ -50,7 +45,7 @@ class Projects extends Component {
             {
                 this.state.projects.map(function(project){
                     return (
-                        <div className="card project-card">
+                        <div className="card project-card" key={project.id}>
                           <div className="card-header">
                             <span>
                                 <Link to={'/projects/' + project.id}>{project.name}</Link>

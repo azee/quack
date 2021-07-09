@@ -2,9 +2,8 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import * as Utils from '../common/Utils';
-
+import Backend from '../services/backend';
 class Profile extends SubComponent {
 
     state = {
@@ -23,8 +22,7 @@ class Profile extends SubComponent {
     }
 
     getUser(){
-        axios
-          .get("/api/user/" + this.state.profile.id)
+        Backend.get("user/" + this.state.profile.id)
           .then(response => {
             this.state.profile = response.data;
             this.setState(this.state);

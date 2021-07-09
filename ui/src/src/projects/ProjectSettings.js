@@ -1,7 +1,6 @@
 /* eslint-disable eqeqeq */
 import React from 'react';
 import SubComponent from '../common/SubComponent'
-import axios from "axios";
 import AsyncSelect from 'react-select/lib/Async';
 import CreatableSelect from 'react-select/lib/Creatable'
 import LauncherForm from '../launches/LauncherForm';
@@ -10,7 +9,7 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import $ from 'jquery';
 import * as Utils from '../common/Utils';
-
+import Backend from '../services/backend';
 class ProjectSettings extends SubComponent {
 
     constructor(props) {
@@ -62,8 +61,7 @@ class ProjectSettings extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        axios
-          .get("/api/project/" + this.state.projectId)
+        Backend.get("project/" + this.state.projectId)
           .then(response => {
             this.state.project = response.data;
             this.state.originalProject = this.state.project;
@@ -72,8 +70,7 @@ class ProjectSettings extends SubComponent {
             this.setState(this.state);
           }).catch(error => {Utils.onErrorMessage("Couldn't get project: ", error)});
 
-          axios
-            .get("/api/launcher/descriptors")
+          Backend.get("launcher/descriptors")
             .then(response => {
               this.state.launcherDescriptors = response.data;
               this.setState(this.state);
@@ -81,12 +78,11 @@ class ProjectSettings extends SubComponent {
      }
 
      getGroups(literal, callback){
-        var url = "/api/user/groups/suggest";
+        var url = "user/groups/suggest";
         if (literal){
             url = url + "?literal=" + literal;
         }
-        axios
-           .get(url)
+        Backend.get(url)
            .then(response => {
              this.state.groups = response.data;
              this.refreshGroupsToDisplay();
@@ -96,11 +92,11 @@ class ProjectSettings extends SubComponent {
      }
 
      getUsers(literal, callback){
-         var url = "/api/user/users/suggest";
+         var url = "user/users/suggest";
          if (literal){
              url = url + "?literal=" + literal;
          }
-         axios
+         Backend
             .get(url)
             .then(response => {
               this.state.users = response.data;
@@ -128,7 +124,7 @@ class ProjectSettings extends SubComponent {
     }
 
     submit(event, name){
-        axios.put('/api/project', this.state.project)
+        Backend.put('project', this.state.project)
             .then(response => {
                 this.state.project = response.data;
                 this.state.originalProject = this.state.project;
@@ -145,7 +141,7 @@ class ProjectSettings extends SubComponent {
     }
 
     removeProject(event){
-        axios.delete('/api/project/' + this.state.project.id)
+        Backend.delete('project/' + this.state.project.id)
             .then(response => {
                 window.location.href = "/";
         }).catch(error => {Utils.onErrorMessage("Couldn't delete project: ", error)});

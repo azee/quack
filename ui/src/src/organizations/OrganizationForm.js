@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import axios from "axios";
 import { withRouter } from 'react-router';
 import * as Utils from '../common/Utils';
-
+import Backend from '../services/backend';
 
 class OrganizationForm extends Component {
 
@@ -38,7 +37,7 @@ class OrganizationForm extends Component {
       }
 
       handleSubmit(event) {
-        axios.post('/api/organization', this.state.organization)
+        Backend.post('organization', this.state.organization)
         .then(response => {
             this.props.history.push('/organizations/' + response.data.id);
         }).catch((error) => {
@@ -49,8 +48,7 @@ class OrganizationForm extends Component {
 
     componentDidMount() {
         if (this.props.id){
-            axios
-              .get("/api/organization/" + this.props.id)
+            Backend.get("organization/" + this.props.id)
               .then(response => {
                 const newState = Object.assign({}, this.state, {
                   organization: response.data

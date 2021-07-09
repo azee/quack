@@ -2,7 +2,6 @@
 /* eslint-disable react/no-direct-mutation-state */
 import React, { Component } from 'react';
 import LaunchForm from '../launches/LaunchForm'
-import axios from "axios";
 import { withRouter } from 'react-router';
 import Select from 'react-select';
 import qs from 'qs';
@@ -10,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import $ from 'jquery';
 import * as Utils from '../common/Utils';
+import Backend from '../services/backend';
 
 class TestCasesFilter extends Component {
     constructor(props) {
@@ -70,8 +70,7 @@ class TestCasesFilter extends Component {
         var params = qs.parse(this.props.location.search.substring(1));
 
         if (params.testSuite){
-            axios
-              .get("/api/" + this.props.match.params.project + "/testsuite/" + params.testSuite)
+           Backend.get(this.props.match.params.project + "/testsuite/" + params.testSuite)
               .then(response => {
                    this.state.testSuite = response.data;
                    this.state.testSuiteNameToDisplay = this.state.testSuite.name;
@@ -188,7 +187,7 @@ class TestCasesFilter extends Component {
         (suiteToSave.filter.filters || []).filter(function(filter){return filter.id}).forEach(function(filter){
             delete filter.title;
         })
-        axios.post('/api/' + this.props.match.params.project + '/testsuite/', suiteToSave)
+        Backend.post(this.props.match.params.project + '/testsuite/', suiteToSave)
             .then(response => {
                 this.state.testSuite = response.data;
                 this.state.testSuiteNameToDisplay = this.state.testSuite.name;

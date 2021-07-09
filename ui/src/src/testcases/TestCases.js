@@ -5,11 +5,11 @@ import SubComponent from '../common/SubComponent'
 import TestCaseForm from '../testcases/TestCaseForm'
 import TestCasesFilter from '../testcases/TestCasesFilter'
 import TestCase from '../testcases/TestCase'
-import axios from "axios";
 import $ from 'jquery';
 import qs from 'qs';
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
+import Backend from '../services/backend';
 
 var jQuery = require('jquery');
 window.jQuery = jQuery;
@@ -70,8 +70,7 @@ class TestCases extends SubComponent {
             }
             this.setState(this.state);
         }
-        axios
-          .get("/api/" + this.props.match.params.project + "/attribute")
+       Backend.get(this.props.match.params.project + "/attribute")
           .then(response => {
                this.state.projectAttributes = response.data.sort((a, b) => (a.name || "").localeCompare(b.name));
                this.state.projectAttributes.unshift({
@@ -118,8 +117,7 @@ class TestCases extends SubComponent {
         this.state.filter = filter;
         this.state.loading = true;
         this.setState(this.state);
-        axios
-          .get("/api/" + this.props.match.params.project + "/testcase/tree?" + this.getFilterApiRequestParams(filter))
+       Backend.get(this.props.match.params.project + "/testcase/tree?" + this.getFilterApiRequestParams(filter))
           .then(response => {
             this.state.testcasesTree = response.data;
             this.state.loading = false;
@@ -141,8 +139,7 @@ class TestCases extends SubComponent {
      }
 
      updateCount(){
-        axios
-            .get("/api/" + this.props.match.params.project + "/testcase/count?" + this.getFilterApiRequestParams(this.state.filter))
+       Backend.get(this.props.match.params.project + "/testcase/count?" + this.getFilterApiRequestParams(this.state.filter))
             .then(response => {
               this.state.count = response.data;
               this.setState(this.state);
@@ -152,8 +149,7 @@ class TestCases extends SubComponent {
 
      loadMoreTestCases(event){
         this.state.filter.skip = (this.state.filter.skip || 0) + this.testCasesFetchLimit;
-        axios
-          .get("/api/" + this.props.match.params.project + "/testcase?" + this.getFilterApiRequestParams(this.state.filter))
+       Backend.get(this.props.match.params.project + "/testcase?" + this.getFilterApiRequestParams(this.state.filter))
           .then(response => {
             if (response.data){
                 this.state.testcasesTree.testCases = this.state.testcasesTree.testCases.concat(response.data);
