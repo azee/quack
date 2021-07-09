@@ -1,9 +1,9 @@
 import React from 'react';
 import SubComponent from '../common/SubComponent'
-import axios from "axios";
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
 import Highcharts from 'highcharts';
+import Backend from '../services/backend';
 
 class LaunchesByUsersPieWidget extends SubComponent {
 
@@ -45,8 +45,7 @@ class LaunchesByUsersPieWidget extends SubComponent {
         if (!this.state.projectId){
             return [];
         }
-        axios
-            .get("/api/" + this.state.projectId + "/launch/statistics?" + Utils.filterToQuery(this.state.filter))
+        Backend.get(this.state.projectId + "/launch/statistics?" + Utils.filterToQuery(this.state.filter))
             .then(response => {
                  this.state.stats = response.data;
                  this.setUpUsersPieSeries();

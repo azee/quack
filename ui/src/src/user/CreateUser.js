@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import axios from "axios";
+import Backend from '../services/backend';
 
 class CreateUser extends Component {
 
@@ -27,7 +27,7 @@ class CreateUser extends Component {
     }
 
     handleSubmit(event) {
-        axios.post('/api/user', this.state.user)
+        Backend.post('user', this.state.user)
         .then(response => {
             window.location = decodeURI('/user/profile/' + response.data.login);
         })

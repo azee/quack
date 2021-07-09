@@ -2,14 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
-import axios from "axios";
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
-
-axios.defaults.withCredentials = true;
-
-
-
+import Backend from '../services/backend';
 class Organizations extends Component {
     state = {
         organizations: [],
@@ -17,8 +12,7 @@ class Organizations extends Component {
     };
 
     componentDidMount() {
-        axios
-          .get("/api/organization")
+        Backend.get("organization")
           .then(response => {
             const organizations = response.data;
             this.state.loading = false;

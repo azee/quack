@@ -4,9 +4,9 @@ import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import { FadeLoader } from 'react-spinners';
-import axios from "axios";
 import * as Utils from '../common/Utils';
 import { Checkbox } from 'semantic-ui-react'
+import Backend from '../services/backend';
 
 class LaunchTestcasesHeatmap extends SubComponent {
 
@@ -30,8 +30,7 @@ class LaunchTestcasesHeatmap extends SubComponent {
     }
 
     getHeatMap(){
-        axios
-            .get("/api/" + this.state.projectId + "/launch/heatmap" + this.props.location.search)
+        Backend.get(this.state.projectId + "/launch/heatmap" + this.props.location.search``)
             .then(response => {
                  this.state.heatmap = response.data;
                  this.state.loading = false;
@@ -63,8 +62,7 @@ class LaunchTestcasesHeatmap extends SubComponent {
 
     onBrokenToggle(id, value, event){
         var testcaseToUpdate;
-        axios
-          .get("/api/" +this.state.projectId + "/testcase/"+ id)
+        Backend.get(this.state.projectId + "/testcase/"+ id)
           .then(response => {
              testcaseToUpdate = response.data;
              if (testcaseToUpdate){
@@ -78,7 +76,7 @@ class LaunchTestcasesHeatmap extends SubComponent {
     }
 
     updateTestcase(testcaseToUpdate){
-        axios.put('/api/' + this.state.projectId + '/testcase/', testcaseToUpdate)
+        Backend.put(this.state.projectId + '/testcase/', testcaseToUpdate)
                 .then(response => {
                     var foundTestcaseStats = this.state.heatmap.find((testcaseStats) => testcaseStats.id == testcaseToUpdate.id);
                     if (foundTestcaseStats){

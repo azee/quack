@@ -4,11 +4,10 @@ import TestSuitesWidget from '../testsuites/TestSuitesWidget'
 import LaunchesWidget from '../launches/LaunchesWidget'
 import LaunchesTrendWidget from '../launches/LaunchesTrendWidget'
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
 import * as Utils from '../common/Utils';
-
+import Backend from '../services/backend';
 class Project extends SubComponent {
 
     constructor(props) {
@@ -42,8 +41,7 @@ class Project extends SubComponent {
      }
 
      getProject(){
-        axios
-          .get("/api/project/" + this.state.project.id)
+        Backend.get("project/" + this.state.project.id)
           .then(response => {
             this.state.project = response.data;
             this.setState(this.state);

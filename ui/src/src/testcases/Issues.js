@@ -7,9 +7,8 @@ import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import Select from 'react-select';
 import AsyncSelect from 'react-select/lib/Async';
 import $ from 'jquery';
-import axios from "axios";
 import * as Utils from '../common/Utils';
-
+import Backend from '../services/backend';
 class Issues extends SubComponent {
     constructor(props) {
         super(props);
@@ -61,7 +60,7 @@ class Issues extends SubComponent {
       }
       if(nextProps.projectId && nextProps.projectId != this.state.projectId){
         this.state.projectId = nextProps.projectId;
-        axios.get('/api/' + this.state.projectId + '/testcase/issue/projects')
+        Backend.get(this.state.projectId + '/testcase/issue/projects')
             .then(response => {
                  this.state.suggestedTrackerProjects = response.data;
                  this.setState(this.state);
@@ -92,7 +91,7 @@ class Issues extends SubComponent {
     }
 
     unlinkIssue(){
-        axios.delete('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id  + '/issue/' + this.issueToRemove)
+        Backend.delete(this.state.projectId + '/testcase/' + this.state.testcase.id  + '/issue/' + this.issueToRemove)
             .then(response => {
                 this.issueToRemove = null;
                 $("#unlink-issue-confirmation").modal("hide");
@@ -101,7 +100,7 @@ class Issues extends SubComponent {
     }
 
     createIssue(event){
-        axios.post('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id + '/issue' , this.state.issue)
+        Backend.post(this.state.projectId + '/testcase/' + this.state.testcase.id + '/issue' , this.state.issue)
             .then(response => {
                 $('#issue-modal').modal('hide');
                 this.state.issue = Object.assign({}, this.defaultIssue);
@@ -111,7 +110,7 @@ class Issues extends SubComponent {
     }
 
     linkIssue(event){
-        axios.post('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id + '/issue/link/' + this.state.linkIssueView.value || "" , this.state.issue)
+        Backend.post(this.state.projectId + '/testcase/' + this.state.testcase.id + '/issue/link/' + this.state.linkIssueView.value || "" , this.state.issue)
             .then(response => {
                 this.state.linkIssueView = {};
                 $('#issue-modal').modal('hide');
@@ -124,7 +123,7 @@ class Issues extends SubComponent {
     refreshIssues(){
         if (!this.state.testcase || !this.state.projectId) return;
         (this.state.testcase.issues || []).forEach(function(issue, index) {
-            axios.get('/api/' + this.state.projectId + '/testcase/issue/' + issue.id)
+            Backend.get(this.state.projectId + '/testcase/issue/' + issue.id)
                 .then(response => {
                     this.state.testcase.issues[index] = response.data;
                     this.setState(this.state);
@@ -144,7 +143,7 @@ class Issues extends SubComponent {
 
     suggestIssues(value, callback){
         var existingIssuesIds = (this.state.testcase.issues || []).map(issue => issue.id);
-        axios.get('/api/' + this.state.projectId + '/testcase/issue/suggest?text=' + value)
+        Backend.get(this.state.projectId + '/testcase/issue/suggest?text=' + value)
             .then(response => {
                  this.state.suggestedIssues = (response.data || []).filter(issue => !existingIssuesIds.includes(issue.id));
                  this.setState(this.state);
@@ -153,7 +152,7 @@ class Issues extends SubComponent {
     }
 
     suggestProjects(value, callback){
-        axios.get('/api/' + this.state.projectId + '/testcase/issue/projects/suggest?text=' + value)
+        Backend.get(this.state.projectId + '/testcase/issue/projects/suggest?text=' + value)
             .then(response => {
                  this.state.suggestedTrackerProjects = response.data;
                  this.setState(this.state);
@@ -170,13 +169,13 @@ class Issues extends SubComponent {
         this.state.issue.trackerProject = {name: value.label, id: value.value};
         this.setState(this.state);
 
-        axios.get('/api/' + this.state.projectId + '/testcase/issue/types?project=' + this.state.issue.trackerProject.id)
+        Backend.get(this.state.projectId + '/testcase/issue/types?project=' + this.state.issue.trackerProject.id)
             .then(response => {
                  this.state.issueTypes = response.data;
                  this.setState(this.state);
         });
 
-        axios.get('/api/' + this.state.projectId + '/testcase/issue/priorities?project=' + this.state.issue.trackerProject.id)
+        Backend.get(this.state.projectId + '/testcase/issue/priorities?project=' + this.state.issue.trackerProject.id)
             .then(response => {
                  this.state.issuePriorities = response.data;
                  this.setState(this.state);

@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import * as Utils from '../common/Utils';
-
-import axios from "axios";
+import Backend from '../services/backend';
 
 class AttributeForm extends Component {
 
@@ -42,7 +41,7 @@ class AttributeForm extends Component {
       }
 
       handleSubmit(event) {
-        axios.post('/api/' + this.props.project + '/attribute', this.state.attribute)
+        Backend.post(this.props.project + '/attribute', this.state.attribute)
         .then(response => {
             this.props.onAttributeAdded(response.data);
             this.state.attribute = {
@@ -57,7 +56,7 @@ class AttributeForm extends Component {
 
 
       handleRemove(event) {
-        axios.delete('/api/' + this.props.project + '/attribute/' + this.state.attribute.id)
+        Backend.delete(this.props.project + '/attribute/' + this.state.attribute.id)
         .then(response => {
             this.props.onAttributeRemoved(this.state.attribute);
             this.state.attribute = {
@@ -77,8 +76,7 @@ class AttributeForm extends Component {
 
     componentDidMount() {
         if (this.props.id){
-            axios
-              .get("/api/" + this.props.project + "/project")
+            Backend.get(this.props.project + "/project")
               .then(response => {
                 const newState = Object.assign({}, this.state, {
                   project: response.data

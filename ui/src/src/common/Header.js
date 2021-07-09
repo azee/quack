@@ -6,9 +6,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
-import axios from "axios";
 import * as UserSession  from '../user/UserSession';
 import * as Utils from '../common/Utils';
+import Backend from '../services/backend';
 
 class Header extends Component {
 
@@ -20,8 +20,7 @@ class Header extends Component {
     }
 
     componentDidMount() {
-        axios
-          .get("/api/user/session")
+        Backend.get("user/session")
           .then(response => {
             if (this.state.session.id !== response.data.id){
                 this.state.session = response.data;
@@ -42,8 +41,7 @@ class Header extends Component {
                     this.props.history.push("/auth?retpath=" + encodeURIComponent(window.location.href));
                 }
             });
-        axios
-          .get("/api/project?includedFields=name,description,id,allowedGroups")
+        Backend.get("project?includedFields=name,description,id,allowedGroups")
           .then(response => {
               this.state.projects = response.data;
               this.setState(this.state);
@@ -74,8 +72,7 @@ class Header extends Component {
     }
 
     getProject(){
-        axios
-          .get("/api/project/" + this.state.projectId)
+        Backend.get("project/" + this.state.projectId)
           .then(response => {
               this.state.projectName = response.data.name;
               this.state.projectId = response.data.id;
@@ -84,8 +81,7 @@ class Header extends Component {
     }
 
     logOut(){
-        axios
-          .delete("/api/user/logout")
+        Backend.delete("user/logout")
           .then(() => {
             const newState = Object.assign({}, this.emptyState);
             this.setState(newState);

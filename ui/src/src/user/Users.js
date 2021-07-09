@@ -3,9 +3,8 @@ import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent';
 import Pager from '../pager/Pager';
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import * as Utils from '../common/Utils';
-
+import Backend from '../services/backend';
 class Users extends SubComponent {
 
     state = {
@@ -46,8 +45,7 @@ class Users extends SubComponent {
     }
 
     getUsers(){
-        axios
-          .get("/api/user?" + Utils.filterToQuery(this.state.filter))
+        Backend.get("user?" + Utils.filterToQuery(this.state.filter))
           .then(response => {
             this.state.users = response.data;
             this.state.loading = false;
@@ -61,8 +59,7 @@ class Users extends SubComponent {
 
     getPager(){
         var countFilter = Object.assign({skip:0, limit:0}, this.state.filter);
-        axios
-            .get("/api/user/count?" + Utils.filterToQuery(countFilter))
+        Backend.get("user/count?" + Utils.filterToQuery(countFilter))
             .then(response => {
                  this.state.pager.total = response.data;
                  this.state.pager.current = this.state.filter.skip / this.state.filter.limit;

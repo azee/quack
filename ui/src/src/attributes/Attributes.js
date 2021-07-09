@@ -3,10 +3,9 @@ import SubComponent from '../common/SubComponent'
 import AttributeForm from '../attributes/AttributeForm'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
-import axios from "axios";
 import $ from 'jquery';
 import { FadeLoader } from 'react-spinners';
-
+import Backend from '../services/backend';
 class Attributes extends SubComponent {
     constructor(props) {
         super(props);
@@ -55,8 +54,7 @@ class Attributes extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        axios
-          .get("/api/" + this.props.match.params.project +  "/attribute")
+        Backend.get(this.props.match.params.project +  "/attribute")
           .then(response => {
             this.state.loading = false;
             const newState = Object.assign({}, this.state, {

@@ -2,12 +2,12 @@
 import React from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import $ from 'jquery';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import * as Utils from '../common/Utils';
+import Backend from '../services/backend';
 
 class Comments extends SubComponent {
     constructor(props) {
@@ -74,8 +74,7 @@ class Comments extends SubComponent {
     }
 
     getComments(){
-        axios
-          .get("/api/"  + this.projectId + "/comment?entityType="+ this.entityType + "&entityId=" + this.entityId + "&orderby=createdTime&orderdir=DESC")
+        Backend.get(this.projectId + "/comment?entityType="+ this.entityType + "&entityId=" + this.entityId + "&orderby=createdTime&orderdir=DESC")
           .then(response => {
             this.state.comments = response.data;
             if (this.onCommentsNumberChanged){
@@ -112,8 +111,8 @@ class Comments extends SubComponent {
 
 
     removeComment(event){
-        axios.delete("/api/"  + this.projectId + "/comment/" + this.commentToRemove)
-            .then(response => {
+        Backend.delete(this.projectId + "/comment/" + this.commentToRemove)
+            .then(() => {
                 this.state.comments = this.state.comments.filter(comment => comment.id != this.commentToRemove);
                 if (this.onCommentsNumberChanged){
                     this.onCommentsNumberChanged(this.state.comments.length);
@@ -125,7 +124,7 @@ class Comments extends SubComponent {
     }
 
     handleSubmit(event){
-        axios.put('/api/' + this.projectId + '/comment/', this.state.commentToEdit)
+        Backend.put(this.projectId + '/comment/', this.state.commentToEdit)
             .then(response => {
                 this.state.comments.unshift(response.data);
                 this.refreshCommentToEdit();
@@ -144,7 +143,7 @@ class Comments extends SubComponent {
     }
 
     handleUpdateSubmit(index, event){
-        axios.post('/api/' + this.projectId + '/comment/', this.state.comments[index])
+        Backend.post(this.projectId + '/comment/', this.state.comments[index])
                 .then(response => {
                     this.state.comments[index] = response.data;
                     this.setState(this.state);

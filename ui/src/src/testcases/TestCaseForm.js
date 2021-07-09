@@ -1,11 +1,11 @@
 import React from 'react';
 import SubComponent from '../common/SubComponent'
-import axios from "axios";
 import { withRouter } from 'react-router';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import * as Utils from '../common/Utils';
+import Backend from '../services/backend';
 
 
 class TestCaseForm extends SubComponent {
@@ -39,7 +39,7 @@ class TestCaseForm extends SubComponent {
       }
 
       handleSubmit(event) {
-        axios.post('/api/' + this.props.match.params.project + '/testcase/', this.state.testcase)
+        Backend.post(this.props.match.params.project + '/testcase/', this.state.testcase)
         .then(response => {
             this.onTestCaseAdded(response.data);
         }).catch(error => {Utils.onErrorMessage("Couldn't create testcase: ", error)});;
@@ -93,8 +93,7 @@ class TestCaseForm extends SubComponent {
         super.componentDidMount();
         this.state.projectAttributes = this.props.projectAttributes || [];
         if (this.props.id){
-            axios
-              .get("/api/"  + this.props.match.params.project + "/testcase/"+ this.props.id)
+           Backend.get(this.props.match.params.project + "/testcase/"+ this.props.id)
               .then(response => {
                 this.state.testcase = response.data;
               })

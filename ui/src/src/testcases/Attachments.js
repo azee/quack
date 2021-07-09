@@ -3,8 +3,8 @@ import SubComponent from '../common/SubComponent'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import $ from 'jquery';
-import axios from "axios";
 import * as Utils from '../common/Utils';
+import Backend, {getApiBaseUrl} from '../services/backend';
 require('popper.js/dist/umd/popper.min.js');
 require('bootstrap-fileinput/js/fileinput.min.js');
 require('bootstrap-fileinput/css/fileinput.min.css');
@@ -40,7 +40,7 @@ class Attachments extends SubComponent {
       if (this.state.projectId && this.state.testcase.id && this.state.testcase.id != null){
           $("#file-data").fileinput({
               previewFileType:'any',
-              uploadUrl: '/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id + '/attachment'
+              uploadUrl: getApiBaseUrl() + this.state.projectId + '/testcase/' + this.state.testcase.id + '/attachment'
           });
           $("#file-data").on('fileuploaded', function(event, file, previewId, index) {
               this.onTestcaseUpdated();
@@ -55,8 +55,7 @@ class Attachments extends SubComponent {
     }
 
     removeAttachment(){
-        axios
-          .delete('/api/' + this.state.projectId + '/testcase/' +  this.state.testcase.id + '/attachment/' + this.attachmentToRemove)
+        Backend.delete(this.state.projectId + '/testcase/' +  this.state.testcase.id + '/attachment/' + this.attachmentToRemove)
           .then(response => {
               this.attachmentToRemove = null;
               $("#remove-attachment-confirmation").modal("hide");
@@ -80,7 +79,7 @@ class Attachments extends SubComponent {
         return (
             <div className="row">
                 <div className="col-sm-11">
-                    <a href={'/api/' + this.state.projectId +
+                    <a href={getApiBaseUrl() + this.state.projectId +
                         '/testcase/attachment/' + this.state.testcase.id + '/' +
                         attachment.id} target='_blank' rel="noreferrer">{attachment.title}</a>
                 </div>

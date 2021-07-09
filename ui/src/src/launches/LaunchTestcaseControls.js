@@ -1,10 +1,9 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable react/no-direct-mutation-state */
 import React, { Component } from 'react';
-import axios from "axios";
 import $ from 'jquery';
 import * as Utils from '../common/Utils';
-
+import Backend from '../services/backend';
 class LaunchTestcaseControls extends Component {
     defaultFailureDetails = {text: ""};
 
@@ -35,7 +34,7 @@ class LaunchTestcaseControls extends Component {
     }
 
     handleStatusSubmit(status, event, dialogToDismiss){
-        axios.post('/api/' + this.state.projectId + '/launch/' + this.state.launchId + '/' + this.state.testcase.uuid + '/status/' + status, this.state.failureDetails)
+        Backend.post(this.state.projectId + '/launch/' + this.state.launchId + '/' + this.state.testcase.uuid + '/status/' + status, this.state.failureDetails)
             .then(response => {
                 this.state.testcase = response.data;
                 this.state.failureDetails = Object.assign({}, this.defaultFailureDetails)

@@ -2,12 +2,12 @@
 import React from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import Pager from '../pager/Pager';
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlug } from '@fortawesome/free-solid-svg-icons'
+import Backend from '../services/backend';
 
 import DatePicker from 'react-date-picker';
 
@@ -65,8 +65,7 @@ class Launches extends SubComponent {
     }
 
     getLaunches(){
-        axios
-            .get("/api/" + this.props.match.params.project + "/launch?" + Utils.filterToQuery(this.state.filter))
+        Backend.get(this.props.match.params.project + "/launch?" + Utils.filterToQuery(this.state.filter))
             .then(response => {
                  this.state.launches = response.data;
                  this.state.loading = false;
@@ -80,8 +79,7 @@ class Launches extends SubComponent {
 
     getPager(){
         var countFilter = Object.assign({skip:0, limit:0}, this.state.filter);
-        axios
-            .get("/api/" + this.props.match.params.project + "/launch/count?" + Utils.filterToQuery(countFilter))
+        Backend.get(this.props.match.params.project + "/launch/count?" + Utils.filterToQuery(countFilter))
             .then(response => {
                  this.state.pager.total = response.data;
                  this.state.pager.current = this.state.filter.skip / this.state.filter.limit;
@@ -91,8 +89,7 @@ class Launches extends SubComponent {
     }
 
     getLauncherDescriptors(){
-        axios
-            .get("/api/launcher/descriptors")
+        Backend.get("launcher/descriptors")
             .then(response => {
               this.state.launcherDescriptors = response.data;
               this.setState(this.state);

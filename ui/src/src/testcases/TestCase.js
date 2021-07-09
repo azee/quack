@@ -7,7 +7,6 @@ import Issues from '../testcases/Issues'
 import Comments from '../comments/Comments'
 import EventsWidget from '../audit/EventsWidget'
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import { withRouter } from 'react-router';
 import $ from 'jquery';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -19,6 +18,7 @@ import { FadeLoader } from 'react-spinners';
 import { faPlug } from '@fortawesome/free-solid-svg-icons'
 import { Checkbox } from 'semantic-ui-react'
 import { ConfirmButton } from '../common/uicomponents/ConfirmButton'
+import Backend from '../services/backend';
 
 class TestCase extends SubComponent {
     constructor(props) {
@@ -122,8 +122,7 @@ class TestCase extends SubComponent {
     }
 
     getTestCase(projectId, testcaseId){
-        axios
-          .get("/api/"  + projectId + "/testcase/"+ testcaseId)
+       Backend.get(projectId + "/testcase/"+ testcaseId)
           .then(response => {
             this.state.testcase = response.data;
             this.state.originalTestcase = JSON.parse(JSON.stringify(this.state.testcase));
@@ -165,7 +164,7 @@ class TestCase extends SubComponent {
     }
 
     handleSubmit(fieldName, event, index, ignoreToggleEdit){
-        axios.put('/api/' + this.projectId + '/testcase/', this.state.testcase)
+        Backend.put(this.projectId + '/testcase/', this.state.testcase)
             .then(response => {
                 this.state.testcase = response.data;
                 this.state.originalTestcase = JSON.parse(JSON.stringify(this.state.testcase));
@@ -184,8 +183,7 @@ class TestCase extends SubComponent {
     }
 
     getAttributes(reRender){
-        axios
-          .get("/api/" + this.projectId + "/attribute")
+       Backend.get(this.projectId + "/attribute")
           .then(response => {
                this.state.projectAttributes = response.data;
                this.setState(this.state);
@@ -354,7 +352,7 @@ class TestCase extends SubComponent {
     }
 
     removeTestcase(){
-        axios.delete('/api/' + this.projectId + '/testcase/' + this.state.testcase.id)
+        Backend.delete(this.projectId + '/testcase/' + this.state.testcase.id)
             .then(response => {
                 window.location.href = window.location.href.replace("testcase=" + this.state.testcase.id, "")
         }).catch(error => {Utils.onErrorMessage("Couldn't remove testcase: ", error)});

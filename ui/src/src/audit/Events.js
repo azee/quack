@@ -2,11 +2,11 @@
 import React from 'react';
 import SubComponent from '../common/SubComponent'
 import Pager from '../pager/Pager';
-import axios from "axios";
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
 import DatePicker from 'react-date-picker';
 import Select from 'react-select';
+import Backend from '../services/backend';
 
 class Events extends SubComponent {
 
@@ -60,8 +60,7 @@ class Events extends SubComponent {
      }
 
      getEvents(){
-         axios
-             .get("/api/" + this.props.match.params.project + "/audit?" + Utils.filterToQuery(this.state.filter))
+         Backend.get(this.props.match.params.project + "/audit?" + Utils.filterToQuery(this.state.filter))
              .then(response => {
                   this.state.events = response.data;
                   this.state.loading = false;
@@ -83,8 +82,7 @@ class Events extends SubComponent {
 
      getPager(){
          var countFilter = Object.assign({skip:0, limit:0}, this.state.filter);
-         axios
-             .get("/api/" + this.props.match.params.project + "/audit/count?" + Utils.filterToQuery(countFilter))
+         Backend.get(this.props.match.params.project + "/audit/count?" + Utils.filterToQuery(countFilter))
              .then(response => {
                   this.state.pager.total = response.data;
                   this.state.pager.current = this.state.filter.skip / this.state.filter.limit;

@@ -2,14 +2,13 @@
 import React from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import { withRouter } from 'react-router';
 import CreatableSelect from 'react-select/lib/Creatable';
 import LauncherForm from '../launches/LauncherForm';
 import $ from 'jquery';
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
-
+import Backend from '../services/backend';
 
 class LaunchForm extends SubComponent {
     constructor(props) {
@@ -53,14 +52,14 @@ class LaunchForm extends SubComponent {
         this.state.launch.testSuite.filter.filters.forEach(function(filter){
             delete filter.title;
         })
-        var url = '/api/' + this.props.match.params.project + '/launch/';
+        var url = this.props.match.params.project + '/launch/';
         if (this.state.restart){
-            url = '/api/' + this.props.match.params.project + '/launch/' + this.state.launch.id + '/restart';
+            url = this.props.match.params.project + '/launch/' + this.state.launch.id + '/restart';
             if (this.state.failedOnly){
                 url += '?failedOnly=true';
             }
         }
-        axios.post(url, this.state.launch)
+        Backend.post(url, this.state.launch)
         .then(response => {
             this.state.launch = response.data;
             if (!this.state.launch.id){
@@ -92,15 +91,13 @@ class LaunchForm extends SubComponent {
     componentDidMount() {
         super.componentDidMount();
 
-        axios
-          .get("/api/project/" + this.props.match.params.project)
+        Backend.get("project/" + this.props.match.params.project)
           .then(response => {
             this.state.project = response.data;
             this.setState(this.state);
           }).catch(error => {Utils.onErrorMessage("Couldn't get project: ", error)});
 
-        axios
-            .get("/api/launcher/descriptors")
+        Backend.get("launcher/descriptors")
             .then(response => {
               this.state.launcherDescriptors = response.data;
               this.setState(this.state);
