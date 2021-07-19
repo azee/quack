@@ -68,7 +68,7 @@
         <spring.version>5.0.9.RELEASE</spring.version>
         <spring.data.version>2.0.10.RELEASE</spring.data.version>
         <httpclient.version>4.5.2</httpclient.version>
-        <jackson.version>2.8.5</jackson.version>
+        <jackson.version>2.12.1</jackson.version>
         <jetty.port>9999</jetty.port>
         <jetty.version>9.4.35.v20201120</jetty.version>
         <sl4j.version>1.7.22</sl4j.version>
